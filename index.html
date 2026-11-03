@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhysioMotion · Prototipo</title>
+  <meta name="description" content="PhysioMotion: plataforma de ejercicios de fisioterapia guiados, meditación y seguimiento de progreso.">
+  <link rel="icon" href="assets/star.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,800;1,800&family=Noto+Serif:wght@400;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ================= 1. BIENVENIDA ================= -->
+  <section id="screen-login" class="screen screen-login" data-title="Bienvenido">
+    <div class="login-wrap">
+      <form class="login-card" id="login-form" novalidate>
+        <h1 class="logo logo-dark">PHYSIO<em>MOTION</em></h1>
+        <h2 class="login-title">Bienvenido</h2>
+        <p class="login-hint">Escribe su apodo para iniciar</p>
+        <label class="field">
+          <span class="sr-only">Apodo</span>
+          <input type="text" id="nickname" placeholder="Apodo" maxlength="20" autocomplete="nickname" required>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+        </label>
+        <p class="field-error" id="login-error" role="alert"></p>
+        <button type="submit" class="btn btn-login">INICIO</button>
+      </form>
+      <div class="login-art">
+        <img src="assets/hero.jpg" alt="Ilustración de dos adultos mayores haciendo ejercicio juntos en un parque">
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 2. CUESTIONARIO ================= -->
+  <section id="screen-quiz" class="screen screen-quiz" data-title="Cuestionario">
+    <div class="quiz-side">
+      <h2>Una decisión<br>por pantalla.</h2>
+      <div class="blob" aria-hidden="true"></div>
+    </div>
+    <div class="quiz-main">
+      <div class="quiz-progress">
+        <span id="quiz-count">Pregunta 1 de 5</span>
+        <span id="quiz-pct">20%</span>
+      </div>
+      <div class="bar"><div class="bar-fill" id="quiz-bar"></div></div>
+      <h3 class="quiz-q" id="quiz-q"></h3>
+      <p class="quiz-sub" id="quiz-sub"></p>
+      <div class="options" id="quiz-options" role="radiogroup"></div>
+      <p class="quiz-saved" id="quiz-saved" aria-live="polite"></p>
+      <div class="quiz-actions">
+        <button type="button" class="btn btn-outline" id="quiz-prev">Anterior</button>
+        <button type="button" class="btn btn-primary" id="quiz-next" disabled>Continuar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= APP (pantallas con encabezado y menú) ================= -->
+  <div id="app-shell" class="app-shell" hidden>
+    <header class="app-header">
+      <svg class="wave" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 0H1440V95C1300 140 1150 70 950 95C700 128 420 135 260 112C150 98 80 110 0 120Z" fill="#5E7A68"/>
+        <path d="M120 118C300 140 560 128 800 100C1000 78 1180 112 1440 82" stroke="#fff" stroke-width="3" fill="none"/>
+      </svg>
+      <div class="header-inner">
+        <span class="logo logo-light">PHYSIO<em>MOTION</em></span>
+        <div class="xp-badge" aria-label="Puntos de experiencia"><img src="assets/star.png" alt=""><span id="xp-header">0 XP</span></div>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <!-- 3. INICIO / PLAN -->
+      <section id="screen-home" class="screen" data-title="Inicio">
+        <div class="plan-card">
+          <p class="plan-hello">Tu plan <span class="js-name">Andrea</span>,</p>
+          <p class="plan-name"><span class="plan-icon" aria-hidden="true">🦵</span> <span class="js-plan">Lección de rodilla o pierna</span></p>
+          <p class="plan-levels"><span class="js-levels">0/3</span> Niveles Completados</p>
+        </div>
+        <ol class="levels" id="levels"></ol>
+      </section>
+
+      <!-- 4. EJERCICIO -->
+      <section id="screen-exercise" class="screen" data-title="Ejercicio">
+        <div class="exercise-top">
+          <button type="button" class="icon-btn" id="ex-close" aria-label="Cerrar ejercicio">✕</button>
+          <div class="bar thin"><div class="bar-fill" id="ex-bar"></div></div>
+        </div>
+        <div class="card exercise-card">
+          <img id="ex-img" src="assets/squat.png" alt="">
+          <h2 id="ex-name">Sentadilla</h2>
+          <p id="ex-desc">Treinta sentadillas controladas</p>
+          <p class="ex-count" id="ex-count" aria-live="polite">30</p>
+          <p class="ex-step" id="ex-step"></p>
+        </div>
+        <div class="exercise-actions">
+          <button type="button" class="btn btn-primary btn-wide" id="ex-start">Empezar</button>
+          <button type="button" class="link-btn" id="ex-skip">Saltar</button>
+        </div>
+      </section>
+
+      <!-- 5. NIVEL COMPLETADO -->
+      <section id="screen-done" class="screen center" data-title="Nivel completado">
+        <img class="smiley pop" src="assets/smiley.png" alt="Carita feliz">
+        <h2 class="done-title" id="done-title">¡Nivel 1 completado!</h2>
+        <p class="done-xp" id="done-xp">+ 20 XP</p>
+        <button type="button" class="btn btn-primary btn-wide" id="done-continue">Continuar</button>
+      </section>
+
+      <!-- 6. PERFIL -->
+      <section id="screen-profile" class="screen" data-title="Perfil">
+        <div class="card profile-card">
+          <img class="smiley sm" src="assets/smiley.png" alt="">
+          <div class="profile-name">
+            <h2 class="js-name" id="profile-name">Andrea</h2>
+            <input type="text" id="profile-name-input" maxlength="20" hidden aria-label="Editar apodo">
+            <button type="button" class="icon-btn" id="edit-name" aria-label="Editar apodo"><img src="assets/pencil.png" alt=""></button>
+          </div>
+          <p class="profile-plan"><span aria-hidden="true">🦵</span> <span class="js-plan">Lección de rodilla o pierna</span></p>
+        </div>
+        <div class="stats">
+          <div class="stat"><strong id="st-xp">0</strong><span>Puntos XP</span></div>
+          <div class="stat"><strong class="js-levels">0/3</strong><span>Niveles</span></div>
+          <div class="stat"><strong id="st-goal">10 min</strong><span>Meta diaria</span></div>
+        </div>
+        <div class="card data-card">
+          <h3>Mis datos</h3>
+          <dl>
+            <div><dt>Condición</dt><dd class="js-plan">Lección de rodilla o pierna</dd></div>
+            <div><dt>Nivel de dolor</dt><dd id="st-pain">Moderado</dd></div>
+            <div><dt>Primer objetivo</dt><dd id="st-focus">Movilidad acompañada</dd></div>
+          </dl>
+        </div>
+        <button type="button" class="link-btn danger" id="reset">Borrar mi perfil y progreso</button>
+      </section>
+
+      <!-- 7. MEDITACIÓN -->
+      <section id="screen-meditation" class="screen" data-title="Meditación">
+        <div class="card breath-card">
+          <button type="button" class="breath-circle" id="breath-circle" aria-label="Iniciar respiración guiada"></button>
+          <p class="breath-text" id="breath-text">Respira con el círculo</p>
+          <p class="breath-sub" id="breath-sub">Toca el círculo para empezar</p>
+        </div>
+        <h3 class="section-title">Meditación y ejercicios</h3>
+        <button type="button" class="card med-item" id="med-breath">
+          <span class="med-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48"><path d="M30 8c-9 0-16 6-16 15 0 4 1 6-2 10l4 1v6c0 2 2 3 4 3h4v5h12V33c3-3 4-6 4-10 0-8-4-15-10-15z" fill="#5E7A68"/><path d="M40 22c3 0 5 1 6 3M40 28c3 0 5 2 6 5M40 25h6" stroke="#5E7A68" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          </span>
+          <span class="med-txt"><strong>Respiración</strong><small>Inhala 4s, sostén 7s, exhala 8s.</small></span>
+        </button>
+        <button type="button" class="card med-item" id="med-scan">
+          <span class="med-icon" aria-hidden="true"><img src="assets/icon-meditation.png" alt="" class="tint"></span>
+          <span class="med-txt"><strong>Escaneo corporal</strong><small>Recorre tu cuerpo con atención, de pies a cabeza.</small></span>
+        </button>
+      </section>
+
+      <!-- 8. PROGRESO -->
+      <section id="screen-progress" class="screen" data-title="Progreso">
+        <h2 class="section-title big">Mi progreso</h2>
+        <p class="progress-sum"><span class="js-levels">0/3</span> Niveles completados – <span id="pg-xp">0</span> XP</p>
+        <div class="stats two">
+          <div class="stat soft"><strong id="pg-days">0</strong><span>Días de ejercicios</span></div>
+          <div class="stat soft"><strong id="pg-month">0</strong><span>Días este mes</span></div>
+        </div>
+        <hr>
+        <h2 class="section-title big">Mi calendario</h2>
+        <div class="card calendar">
+          <div class="cal-head">
+            <button type="button" class="icon-btn" id="cal-prev" aria-label="Mes anterior">‹</button>
+            <strong id="cal-title">Noviembre 2026</strong>
+            <button type="button" class="icon-btn" id="cal-next" aria-label="Mes siguiente">›</button>
+          </div>
+          <div class="cal-grid" id="cal-grid"></div>
+          <p class="cal-legend"><span class="dot today"></span> Hoy <span class="dot done"></span> Día con ejercicio</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Botones laterales: accesibilidad y audio -->
+    <div class="side-tools">
+      <button type="button" class="side-btn" id="a11y-btn" aria-pressed="false" aria-label="Modo de lectura fácil (texto grande)" title="Texto grande">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="2.2"/><path d="M4 7.5l8 1.5 8-1.5M12 9v5m0 0l-3.5 7M12 14l3.5 7" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>
+      </button>
+      <button type="button" class="side-btn" id="audio-btn" aria-label="Escuchar esta pantalla" title="Escuchar pantalla">
+        <svg viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0116 0v2" stroke-width="2" fill="none"/><rect x="3" y="13" width="4" height="7" rx="1.5"/><rect x="17" y="13" width="4" height="7" rx="1.5"/></svg>
+      </button>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Menú principal">
+      <button type="button" data-go="home"><img src="assets/icon-home.png" alt=""><span>Inicio</span></button>
+      <button type="button" data-go="profile"><img src="assets/icon-user.png" alt=""><span>Perfil</span></button>
+      <button type="button" data-go="meditation"><img src="assets/icon-meditation.png" alt=""><span>Meditación</span></button>
+      <button type="button" data-go="progress"><img src="assets/icon-progress.png" alt=""><span>Progreso</span></button>
+    </nav>
+  </div>
+
+  <!-- Ventana de confirmación -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <h3 id="modal-title">¿Borrar tu perfil?</h3>
+      <p>Se eliminarán tu apodo, respuestas y progreso de este navegador.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="modal-cancel">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="modal-ok">Sí, borrar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
